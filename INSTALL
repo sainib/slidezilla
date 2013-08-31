@@ -1,0 +1,200 @@
+Installation Instructions
+=========================
+
+Slidezilla has following major dependencies
+
+- FFMPEG
+- ImageMagick
+- SOX
+- LAME
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+Here are the steps to install the latest version of these and other dependencies on CentOS
+For Ubuntu, change yum to apt-get.
+
+cd /path/to/downloads_directory
+
+sudo rpm -Uvh http://download.fedoraproject.org/pub/epel/5/i386/epel-release-5-4.noarch.rpm
+
+sudo yum remove libvpx libogg libvorbis libtheora libx264 x264 ffmpeg
+sudo yum erase ffmpeg x264 x264-devel
+
+sudo yum -y install autoconf automake gcc gcc-c++ git libtool make nasm pkgconfig wget zlib-devel
+sudo yum -y install SDL-devel a52dec a52dec-devel alsa-lib-devel faac faac-devel faad2 faad2-devel
+sudo yum -y install freetype-devel giflib gsm gsm-devel imlib2 imlib2-devel libICE-devel libSM-devel libX11-devel libmad-devel
+sudo yum -y install libXau-devel libXdmcp-devel libXext-devel libXrandr-devel libXrender-devel libXt-devel
+sudo yum -y install libid3tag libogg-devel libvorbis-devel mesa-libGL-devel mesa-libGLU-devel xorg-x11-proto-devel xvidcore xvidcore-devel zlib-devel
+sudo yum -y install amrnb-devel amrwb-devel
+sudo yum -y install libtheora libtheora-devel
+sudo yum -y install glibc gcc gcc-c++ autoconf automake libtool
+sudo yum -y install subversion
+sudo yum -y install ncurses-devel
+sudo rpm -Uvh http://mirror.centos.org/centos/5/os/x86_64/CentOS/libraw1394-1.3.0-1.el5.x86_64.rpm
+sudo rpm -Uvh http://mirror.centos.org/centos/5/os/x86_64/CentOS/libraw1394-devel-1.3.0-1.el5.x86_64.rpm
+sudo yum -y install libdc1394 libdc1394-devel
+sudo yum -y install yasm nasm
+sudo yum -y install libvpx*
+sudo yum -y install git-core
+sudo yum -y install opencore-amr-devel
+sudo yum -y install git
+##sudo yum -y install x264 x264-devel
+
+mv all-20110131.tar all-20110131.tar.old
+
+sudo wget http://www8.mplayerhq.hu/MPlayer/releases/codecs/all-20110131.tar.bz2
+sudo bunzip2 all-20110131.tar.bz2
+sudo tar xvf all-20110131.tar
+
+sudo cp -f all-20110131/* /usr/local/lib/codecs/
+sudo cp -f all-20110131/* /usr/local/lib64/codecs/
+sudo chmod -R 755 /usr/local/lib/codecs/
+sudo chmod -R 755 /usr/local/lib64/codecs/
+
+
+sudo wget http://downloads.xiph.org/releases/ogg/libogg-1.3.0.tar.gz
+sudo tar xzvf libogg-1.3.0.tar.gz
+cd libogg-1.3.0
+sudo ./configure --enable-shared
+sudo make && sudo make install
+cd ..
+
+
+sudo wget http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.3.tar.gz
+sudo tar xzvf libvorbis-1.3.3.tar.gz
+cd libvorbis-1.3.3
+sudo ./configure --enable-shared
+sudo make && sudo make install
+cd ..
+
+sudo wget http://sourceforge.net/projects/lame/files/lame/3.99/lame-3.99.5.tar.gz
+sudo tar -zxf lame-3.99.5.tar.gz
+cd lame-3.99.5
+sudo ./configure --enable-shared
+sudo make && sudo make install
+cd ..
+
+
+sudo wget http://downloads.xiph.org/releases/theora/libtheora-1.1.1.tar.gz
+sudo tar xzvf libtheora-1.1.1.tar.gz
+cd libtheora-1.1.1
+sudo ./configure --enable-shared
+sudo make && sudo make install
+cd ..
+
+
+
+sudo wget http://downloads.xvid.org/downloads/xvidcore-1.3.2.tar.gz
+sudo tar zxfv xvidcore-1.3.2.tar.gz
+cd xvidcore/build/generic
+sudo ./configure --enable-shared
+sudo make 
+sudo make install
+cd ../../../
+
+
+sudo wget http://sourceforge.net/projects/faac/files/faac-src/faac-1.28/faac-1.28.tar.gz
+sudo tar xzvf faac-1.28.tar.gz
+cd faac-1.28
+sudo ./bootstrap
+cd ./common/mp4v2/
+################## Remove line 126 containing strcasestr from mpeg4ip.h found in the commom folder, as a temporary workaround.
+################## It seems it does not properly exclude its own prototype when it is already included by means of glibc's strcasestr
+################## (#define _GNU_SOURCE 1).
+sudo vi mpeg4ip.h
+cd /path/to/downloads_directory/faac-1.28
+sudo ./configure --enable-shared
+sudo make && sudo make install
+cd ..
+
+
+sudo git clone http://git.chromium.org/webm/libvpx.git
+cd libvpx
+sudo git checkout v1.2.0
+sudo ./configure --enable-shared
+sudo make && sudo make install
+cd ..
+
+
+
+sudo wget http://downloads.sourceforge.net/opencore-amr/vo-aacenc-0.1.2.tar.gz
+sudo tar xzvf vo-aacenc-0.1.2.tar.gz
+cd vo-aacenc-0.1.2
+sudo ./configure --enable-shared
+sudo make && sudo make install
+cd ..
+
+#####Try with static first
+
+sudo git clone git://git.videolan.org/x264.git
+cd x264
+sudo ./configure --enable-shared
+sudo make && sudo make install
+sudo cp libx264.a /usr/local/lib
+cd ..
+
+export LD_LIBRARY_PATH=/usr/local/lib/
+sudo ldconfig
+
+sudo git clone git://source.ffmpeg.org/ffmpeg.git
+cd ffmpeg
+sudo git checkout n1.2
+sudo ./configure --enable-version3 --enable-libvpx --enable-libfaac \
+--enable-libmp3lame --enable-libtheora --enable-libvorbis --enable-libx264 --enable-libvo-aacenc --enable-libxvid --disable-ffplay \
+--enable-gpl --enable-postproc --enable-nonfree --enable-avfilter --enable-shared --enable-pthreads --extra-cflags=-fPIC --arch=x86_64
+sudo make && sudo make install
+cd ..
+sudo ldconfig
+
+
+
+
+
+##ID3TAG
+cd /path/to/downloads_directory
+sudo wget http://sourceforge.net/projects/mad/files/libid3tag/0.15.1b/libid3tag-0.15.1b.tar.gz
+sudo tar -xvf libid3tag-0.15.1b.tar.gz
+cd libid3tag-0.15.1b
+sudo ./configure --enable-shared
+sudo make
+sudo make install
+cd ..
+
+
+##LIBMAD
+cd /path/to/downloads_directory
+sudo wget http://sourceforge.net/projects/mad/files/libmad/0.15.1b/libmad-0.15.1b.tar.gz
+sudo tar -xvf libmad-0.15.1b.tar.gz
+cd libmad-0.15.1b/
+sudo vi configure
+# delete this line
+	optimize="$optimize -fforce-mem"
+sudo ./configure --enable-shared
+sudo make && sudo make install
+cd ..
+
+
+##MAD
+cd /path/to/downloads_directory
+sudo wget http://sourceforge.net/projects/mad/files/madplay/0.15.2b/madplay-0.15.2b.tar.gz
+sudo tar -xvf madplay-0.15.2b.tar.gz
+cd madplay-0.15.2b/
+sudo ./configure --enable-shared
+sudo make
+sudo make install
+cd ..
+
+
+###INSTALLING SOX
+cd /path/to/downloads_directory
+sudo wget http://sourceforge.net/projects/sox/files/sox/14.4.1/sox-14.4.1.tar.bz2
+sudo bunzip2 sox-14.4.1.tar.bz2
+sudo tar -xvf sox-14.4.1.tar
+cd sox-14.4.1
+sudo ./configure --with-lame --with-mad  --enable-shared
+sudo make -s
+sudo make install
+
+

@@ -1,0 +1,26 @@
+slidezilla
+==========
+
+Unix script to create a video by using many images and video clips.
+
+The goal is to be able to perform all the operations that are currently supported by 
+iMovie or MovieMaker using this unix script. 
+
+You can provide a config file with input details as a parameters to the script.
+
+
+Features
+========
+
+1) Use Images and/or videos as input for the final video
+2) Specify the background music file. 
+3) You can also use the in-built effects or add more custom effects. 
+4) You can also add titles for each image or video
+
+
+Usage 
+=====
+
+slidezilla.sh  <-debug> -cf /path/to/config_file
+
+
