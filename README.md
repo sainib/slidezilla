@@ -68,6 +68,7 @@ git checkout sko
 * Using IntelliJ, Select File->Import Project.
 * Locate the project and select pom.xml to import project as Maven project
 * Once imported, Select Run->Edit Configurations  & create a new configuration 
+```
  	Name : Run
 	Main Class : com.hortonworks.poc.ey.Application
 	VM Options : -Dorg.jboss.logging.provider=slf4j -Xmx2g -Xms2g -XX:MaxPermSize=512m
@@ -75,7 +76,7 @@ git checkout sko
 	Use classpath of module : eyboot
 	Before launch : Make
 	<Click Apply and then Ok>
-
+```
 
 
 ### Build 
@@ -88,6 +89,7 @@ To ensure everything is compiling fine, compile the project first by choosing Bu
 The main configuration that needs to be updated for the application are the end points for hadoop services.
 Open file <project-home-directory>/eyboot/src/main/resources/config/application-dev.yml
 Scroll to the bottom and change the following properties to correctly point to your local hadoop cluster
+```
 hadoop:
     hive:
         baseUrl: jdbc:hive2://sandbox.hortonworks.com:10000
@@ -98,7 +100,7 @@ hadoop:
         username: hdfs
     webhcat:
         baseUrl: http://sandbox.hortonworks.com:50111/templeton/v1
-
+```
 
 ### Run
 
@@ -107,8 +109,8 @@ To start the server, choose Run->Run'Run'
 ### Access  
 
 Access the application at http://localhost:8080/#/login
-
+```
 user id = admin 
 password = admin 
-
+```
 
